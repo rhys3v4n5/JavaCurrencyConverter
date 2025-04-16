@@ -1,0 +1,8 @@
+/*
+    @FXML
+    protected void calculate() {
+        double convertedCurrency = currencyExchange.getConvertedCurrency(selectedCurrency, 10.00);
+        String finalOutput = String.format("The converted value is %.2f" + selectedCurrency, convertedCurrency);
+        resultLabel.setText(finalOutput);
+    }
+     */
