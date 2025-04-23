@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 public class APIController {
+    private static final String BASE_URL = "https://api.frankfurter.dev/v1/latest?base=%s&symbols=%s";
     private static String baseCurrency;
     private static String desiredCurrency;
-    private static final String BASE_URL = "https://api.frankfurter.dev/v1/latest?base=%s&symbols=%s";
 
     public APIController(String base, String desired) {
         baseCurrency = base;
@@ -27,10 +27,14 @@ public class APIController {
                 .build();
         Response response = client.newCall(request).execute();
 
-        String responseBody = response.body().string();
-        JSONObject jsonObject = new JSONObject(responseBody);
-        JSONObject ratesObject = jsonObject.getJSONObject("rates");
-        Double rate = ratesObject.getDouble(desiredCurrency.toUpperCase());
-        return originalAmount * rate;
+        if (response.isSuccessful()) {
+            String responseBody = response.body().string();
+            JSONObject jsonObject = new JSONObject(responseBody);
+            JSONObject ratesObject = jsonObject.getJSONObject("rates");
+            double rate = ratesObject.getDouble(desiredCurrency.toUpperCase());
+            return originalAmount * rate;
+        } else {
+            return -1;
+        }
     }
 }

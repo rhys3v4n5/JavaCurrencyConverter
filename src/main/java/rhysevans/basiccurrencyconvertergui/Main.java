@@ -12,7 +12,7 @@ import java.io.IOException;
  * @author rhyse
  * @version 1.0
  * class to create the scene/stage and launch the GUI
- * last updated: 26/07/2024
+ * last updated: 23/04/2025
  */
 public class Main extends Application {
     @Override

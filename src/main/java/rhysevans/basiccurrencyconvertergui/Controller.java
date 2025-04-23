@@ -20,18 +20,23 @@ import java.util.Objects;
  */
 public class Controller {
 
+    private static final String OUTPUT_STRING = "The converted value is %.2f";
+    private static final String INCORRECT_CURRENCY = "One of your inputted currencies doesn't exist, try again.";
+
     // Pre-determined options & selected currency variable
     private final String[] currencyOptions = {"EUR", "USD", "AUD"};
     private String selectedCurrency;
     private String originalCurrency;
 
+    // the original currency type
     @FXML
     private TextField originalCurrencyType;
+
     // Drop down menu
     @FXML
     private ChoiceBox<String> currencyType;
 
-    // Original number input
+    // Original value input
     @FXML
     private TextField inputTextField;
 
@@ -85,12 +90,15 @@ public class Controller {
 
     @FXML
     private void calculate(double originalAmount) throws IOException {
-       //  double convertedCurrency = CurrencyExchange.getConvertedCurrency(selectedCurrency, originalAmount);
-
         APIController controller = new APIController(originalCurrency, selectedCurrency);
         double convertedCurrency = controller.convert(originalAmount);
 
-        String finalOutput = String.format("The converted value is %.2f" + selectedCurrency, convertedCurrency);
-        resultLabel.setText(finalOutput);
+        String finalOutput = String.format(OUTPUT_STRING + selectedCurrency, convertedCurrency);
+        if (convertedCurrency >= 0) {
+            resultLabel.setText(finalOutput);
+
+        } else {
+            resultLabel.setText(INCORRECT_CURRENCY);
+        }
     }
 }
