@@ -2,7 +2,6 @@ package rhysevans.basiccurrencyconvertergui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -13,28 +12,31 @@ import java.util.Objects;
 
 /**
  * @author rhyse
- * @version 1.0
+ * @version 2.0
  * a class to control the GUI for the currency exchange
- * last updated: 26/07/2024
- * TODO MAKE IT POSSIBLE TO CONVERT FROM MULTIPLE CURRENCIES NOT JUST GBP
+ * last updated: 23/04/2025
  */
 public class Controller {
 
     private static final String OUTPUT_STRING = "The converted value is %.2f";
     private static final String INCORRECT_CURRENCY = "One of your inputted currencies doesn't exist, try again.";
+    private static final String VALUE_ERROR = "The value must be positive!";
 
-    // Pre-determined options & selected currency variable
-    private final String[] currencyOptions = {"EUR", "USD", "AUD"};
-    private String selectedCurrency;
+    // The original currency and the desired currency
     private String originalCurrency;
+    private String desiredCurrency;
 
     // the original currency type
     @FXML
     private TextField originalCurrencyType;
 
-    // Drop down menu
+    @FXML
+    private TextField selectedCurrencyType;
+
+    /*Drop down menu
     @FXML
     private ChoiceBox<String> currencyType;
+     */
 
     // Original value input
     @FXML
@@ -55,49 +57,37 @@ public class Controller {
         poundImageView.setImage(poundImage);
     }
 
-
-    @FXML
-    private void initialize(){
-        currencyType.getItems().addAll(currencyOptions);
-        currencyType.setOnAction(this::getSelectedCurrency);
-    }
-
-    public void getSelectedCurrency(ActionEvent actionEvent) {
-        selectedCurrency = currencyType.getValue();
-        System.out.println(selectedCurrency);
-    }
-
     @FXML
     private void getInput(ActionEvent event) {
         try {
-
             originalCurrency = originalCurrencyType.getText();
-            System.out.println(originalCurrency);
+            desiredCurrency = selectedCurrencyType.getText();
             double originalAmount = Double.parseDouble(inputTextField.getText());
-            System.out.println(originalAmount);
+
             // Code to check input
             if (originalAmount >= 0) {
                 calculate(originalAmount);
             } else {
-                resultLabel.setText("The value must be positive");
+                resultLabel.setText(VALUE_ERROR);
             }
-        } catch (NumberFormatException e) {
-            System.out.println(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        } catch (NumberFormatException nfe) {
+            System.out.println(nfe);
+        } catch (Exception err) {
+            System.out.println(err.getMessage());
         }
     }
 
     @FXML
     private void calculate(double originalAmount) throws IOException {
-        APIController controller = new APIController(originalCurrency, selectedCurrency);
+        APIController controller = new APIController(originalCurrency, desiredCurrency);
         double convertedCurrency = controller.convert(originalAmount);
 
-        String finalOutput = String.format(OUTPUT_STRING + selectedCurrency, convertedCurrency);
+        String finalOutput = String.format(OUTPUT_STRING + desiredCurrency, convertedCurrency);
+        // if it's a valid result, display the value.
         if (convertedCurrency >= 0) {
             resultLabel.setText(finalOutput);
-
         } else {
+            // alert the client that their desired currency doesn't exist.
             resultLabel.setText(INCORRECT_CURRENCY);
         }
     }

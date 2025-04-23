@@ -6,6 +6,11 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.math.BigDecimal;
 
+/**
+ * @author rhyse
+ * @version 1.1
+ * Controls API calls that retrieve exchange rates
+ */
 public class APIController {
     private static final String BASE_URL = "https://api.frankfurter.dev/v1/latest?base=%s&symbols=%s";
     private static String baseCurrency;
@@ -27,6 +32,7 @@ public class APIController {
                 .build();
         Response response = client.newCall(request).execute();
 
+        // if the response succeeds, convert.
         if (response.isSuccessful()) {
             String responseBody = response.body().string();
             JSONObject jsonObject = new JSONObject(responseBody);
@@ -34,6 +40,7 @@ public class APIController {
             double rate = ratesObject.getDouble(desiredCurrency.toUpperCase());
             return originalAmount * rate;
         } else {
+            // otherwise return -1 for error code.
             return -1;
         }
     }

@@ -23,7 +23,7 @@
             </font>
          </Label>
           <TextField fx:id="originalCurrencyType" layoutX="105.0" layoutY="150.0" prefHeight="25.0" prefWidth="150.0" />
-          <ChoiceBox fx:id="currencyType" layoutX="105.0" layoutY="183.0" prefWidth="150.0" />
+          <TextField fx:id="selectedCurrencyType" layoutX="105.0" layoutY="183.0" prefWidth="150.0" />
          <TextField fx:id="inputTextField" layoutX="106.0" layoutY="218.0" prefHeight="25.0" prefWidth="150.0" />
         <Button layoutX="147.0" layoutY="256.0" onAction="#getInput" text="Convert">
             <font>
